@@ -7,6 +7,9 @@ import { ApiResponse } from "../utils/ApiResponse.js"
 const registerUser = asyncHandler(async (req, res) => {
     const { fullName, email, username, password } = req.body;
 
+    // console.log(req.body)
+    // console.log(req.files)
+
     if (
         [fullName, email, username, password].some(
             (field) => !field || field.trim() === ""
@@ -25,7 +28,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
     const avatarLocalPath = req.files?.avatar[0]?.path;
     // console.log(avatarLocalPath)
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    const coverImageLocalPath = req.files?.coverImage?.[0].path;
+    //  undefined ki properties nahi pd skte , aa ke isko js me ek arrays banae opption chaining karke check karna hai
 
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is required")
@@ -41,7 +45,7 @@ const registerUser = asyncHandler(async (req, res) => {
     const user = await User.create({
         fullName,
         avatar: avatar.url,
-        coverImage: coverImage.url || "",
+        coverImage: coverImage?.url || "",
         email,
         password,
         username: username.toLowerCase()
