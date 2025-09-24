@@ -258,7 +258,9 @@ const updateAccountDetails = asyncHandler(async (req,res) => {
         throw new ApiError(400,'All fields are required')
     }
 
-    const user = User.findByIdAndUpdate(
+    // console.log(fullName,email)
+
+    const user = await User.findByIdAndUpdate(
         req.user?._id,
         {
             $set: {
@@ -267,6 +269,8 @@ const updateAccountDetails = asyncHandler(async (req,res) => {
         },
         {new:true}
     ).select("-password -refreshToken")
+
+    console.log(user)
 
     return res
     .status(200)
